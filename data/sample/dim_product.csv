@@ -1,0 +1,9 @@
+product_id,product_name,category,brand
+101,Молоко 1л,Молочка,LocalFarm
+102,Хлеб белый,Хлеб,BakerCo
+103,Сыр 200г,Молочка,LocalFarm
+104,Сок яблочный,Напитки,JuiceBar
+105,Вода 0.5,Напитки,Aqua
+106,Йогурт,Молочка,LocalFarm
+107,Печенье,Бакалея,SweetDay
+108,Чай чёрный,Напитки,TeaHouse
