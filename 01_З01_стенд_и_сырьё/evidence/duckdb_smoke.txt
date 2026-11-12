@@ -1,0 +1,16 @@
+DuckDB 1.5.6
+RAW     C:\Users\butko\Desktop\OLAP\data\raw
+
+  заказы                 olist_orders_dataset.csv                       99,441
+  позиции заказов        olist_order_items_dataset.csv                 112,650
+  покупатели             olist_customers_dataset.csv                    99,441
+  продавцы               olist_sellers_dataset.csv                       3,095
+  товары                 olist_products_dataset.csv                     32,951
+  платежи                olist_order_payments_dataset.csv              103,886
+  отзывы                 olist_order_reviews_dataset.csv                99,224
+  точки геолокации       olist_geolocation_dataset.csv               1,000,163
+  переводы категорий     product_category_name_translation.csv              71
+
+  Оборот доставленных заказов (SUM(price)) : 13,221,498.11
+
+OK — DuckDB читает сырьё, стенд рабочий.

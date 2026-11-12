@@ -1,0 +1,74 @@
+# Доказательство, что стенд жив (З01)
+
+Снято скриптом `01_З01_стенд_и_сырьё/scripts/ping_evidence.py`.
+
+## 1. Docker
+### docker compose ps
+```
+NAME               IMAGE                                      COMMAND                  SERVICE      CREATED        STATUS                    PORTS
+olist_clickhouse   clickhouse/clickhouse-server:24.8-alpine   "/entrypoint.sh"         clickhouse   22 hours ago   Up 11 minutes (healthy)   0.0.0.0:8123->8123/tcp, [::]:8123->8123/tcp, 0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+olist_metabase     metabase/metabase:v0.52.4                  "/app/run_metabase.sh"   metabase     22 hours ago   Up 11 minutes             0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+```
+
+### образ ClickHouse
+```
+clickhouse/clickhouse-server:24.8-alpine  b002e56ed5c1
+```
+
+## 2. ClickHouse отвечает
+### curl http://localhost:8123/ping
+```
+Ok.
+```
+
+### SELECT version(), currentUser(), currentDatabase()  (HTTP, пользователь olist)
+```
+24.8.14.39	olist	olist
+```
+
+### count() из ClickHouse — база создана и отвечает на запросы
+```sql
+SELECT 'таблиц в базе olist' AS what, count() AS n
+FROM system.tables WHERE database = 'olist';
+```
+```
+таблиц в базе olist	10
+dim_category	ReplacingMergeTree
+dim_customer	ReplacingMergeTree
+dim_date	ReplacingMergeTree
+dim_geo	ReplacingMergeTree
+dim_product	ReplacingMergeTree
+dim_product_scd2	ReplacingMergeTree
+dim_seller	ReplacingMergeTree
+fact_sales	MergeTree
+mv_gmv_day_category	AggregatingMergeTree
+mv_gmv_day_category_mv	MaterializedView
+```
+
+### данные в ClickHouse (загружены на З07)
+```
+fact_sales	112650
+GMV_delivered	13221498.11
+```
+
+## 3. DuckDB читает сырьё
+```
+DuckDB 1.5.6
+RAW     C:\Users\butko\Desktop\OLAP\data\raw
+
+  заказы                 olist_orders_dataset.csv                       99,441
+  позиции заказов        olist_order_items_dataset.csv                 112,650
+  покупатели             olist_customers_dataset.csv                    99,441
+  продавцы               olist_sellers_dataset.csv                       3,095
+  товары                 olist_products_dataset.csv                     32,951
+  платежи                olist_order_payments_dataset.csv              103,886
+  отзывы                 olist_order_reviews_dataset.csv                99,224
+  точки геолокации       olist_geolocation_dataset.csv               1,000,163
+  переводы категорий     product_category_name_translation.csv              71
+
+  Оборот доставленных заказов (SUM(price)) : 13,221,498.11
+
+OK — DuckDB читает сырьё, стенд рабочий.
+```
+
+Полный вывод — в `evidence/duckdb_smoke.txt`.
